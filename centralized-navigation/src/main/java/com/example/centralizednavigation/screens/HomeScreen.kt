@@ -16,6 +16,7 @@ import com.example.centralizednavigation.Navigation
  * ホーム画面
  * 集中管理型：Navigation.Navigatorを使用して遷移
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController? = null) {
     val items = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5")
@@ -89,6 +90,25 @@ fun HomeScreen(navController: NavController? = null) {
                     )
                 }
             }
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // MenuBarの二回タップでトップ画面に戻る処理のデモ
+        Text(
+            text = "MenuBar二回タップ処理のデモ",
+            style = MaterialTheme.typography.titleMedium
+        )
+        
+        Button(
+            onClick = { 
+                // 集中管理型：Navigation.Navigatorを使用
+                navController?.let { 
+                    Navigation.Navigator.navigateToHomeWithClearBackStack(it)
+                }
+            }
+        ) {
+            Text("Clear BackStack & Go Home")
         }
     }
 }

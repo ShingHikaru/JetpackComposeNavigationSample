@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.centralizednavigation.ui.theme.CentralizedNavigationTheme
+import com.example.centralizednavigation.Navigation
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +38,8 @@ fun CentralizedNavigationApp() {
         navController = navController,
         startDestination = Navigation.Routes.HOME
     ) {
-        Navigation.setupNavigation()
+        with(Navigation) {
+            setupNavigation(navController)
+        }
     }
 }

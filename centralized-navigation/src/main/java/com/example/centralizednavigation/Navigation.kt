@@ -4,6 +4,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.example.centralizednavigation.screens.HomeScreen
+import com.example.centralizednavigation.screens.ProfileScreen
+import com.example.centralizednavigation.screens.SettingsScreen
+import com.example.centralizednavigation.screens.DetailScreen
 
 /**
  * 集中管理型ナビゲーション
@@ -23,22 +27,22 @@ object Navigation {
     /**
      * ナビゲーショングラフの構築
      */
-    fun NavGraphBuilder.setupNavigation() {
+    fun NavGraphBuilder.setupNavigation(navController: NavController) {
         composable(Routes.HOME) {
-            HomeScreen()
+            HomeScreen(navController = navController)
         }
         
         composable(Routes.PROFILE) {
-            ProfileScreen()
+            ProfileScreen(navController = navController)
         }
         
         composable(Routes.SETTINGS) {
-            SettingsScreen()
+            SettingsScreen(navController = navController)
         }
         
         composable(Routes.DETAIL) { backStackEntry ->
             val itemId = backStackEntry.arguments?.getString("itemId") ?: ""
-            DetailScreen(itemId = itemId)
+            DetailScreen(itemId = itemId, navController = navController)
         }
     }
     
@@ -68,6 +72,16 @@ object Navigation {
         fun navigateBack(navController: NavController) {
             if (navController.previousBackStackEntry != null) {
                 navController.popBackStack()
+            }
+        }
+        
+        /**
+         * MenuBarの二回タップでトップ画面に戻る処理
+         * バックスタックをクリアしてホーム画面に遷移
+         */
+        fun navigateToHomeWithClearBackStack(navController: NavController) {
+            navController.navigate(Routes.HOME) {
+                popUpTo(0) { inclusive = false }
             }
         }
     }

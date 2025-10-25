@@ -15,6 +15,7 @@ import com.example.distributednavigation.LocalNavController
  * ホーム画面
  * 分散管理型：LocalNavController.currentを使用して遷移
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
     val navController = LocalNavController.current
@@ -87,6 +88,25 @@ fun HomeScreen() {
                     )
                 }
             }
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // MenuBarの二回タップでトップ画面に戻る処理のデモ
+        Text(
+            text = "MenuBar二回タップ処理のデモ",
+            style = MaterialTheme.typography.titleMedium
+        )
+        
+        Button(
+            onClick = { 
+                // 分散管理型：各画面で直接実装が必要
+                navController.navigate("home") {
+                    popUpTo(0) { inclusive = false }
+                }
+            }
+        ) {
+            Text("Clear BackStack & Go Home")
         }
     }
 }
