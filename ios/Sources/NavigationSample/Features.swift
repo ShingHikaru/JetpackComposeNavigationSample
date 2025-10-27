@@ -1,61 +1,50 @@
 import ComposableArchitecture
-import SwiftUI
+import Foundation
 
-// MARK: - Home Feature
 @Reducer
 struct HomeFeature {
     @ObservableState
     struct State: Equatable {
-        var items: [String] = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"]
+        var count = 0
     }
     
     enum Action {
-        case itemTapped(String)
-        case navigateToProfile
-        case navigateToSettings
+        case incrementButtonTapped
     }
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .itemTapped:
-                return .none
-            case .navigateToProfile:
-                return .none
-            case .navigateToSettings:
+            case .incrementButtonTapped:
+                state.count += 1
                 return .none
             }
         }
     }
 }
 
-// MARK: - Profile Feature
 @Reducer
 struct ProfileFeature {
     @ObservableState
     struct State: Equatable {
-        var userName: String = "User Name"
-        var email: String = "user@example.com"
+        var userName: String = "ShingHikaru"
+        var userEmail: String = "fiveh.5h@gmail.com"
     }
     
     enum Action {
-        case editProfile
-        case navigateToSettings
+        case dummy
     }
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .editProfile:
-                return .none
-            case .navigateToSettings:
+            case .dummy:
                 return .none
             }
         }
     }
 }
 
-// MARK: - Settings Feature
 @Reducer
 struct SettingsFeature {
     @ObservableState
@@ -65,48 +54,39 @@ struct SettingsFeature {
     }
     
     enum Action {
-        case toggleNotifications
-        case toggleDarkMode
+        case toggleNotifications(Bool)
+        case toggleDarkMode(Bool)
     }
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .toggleNotifications:
-                state.notificationsEnabled.toggle()
+            case let .toggleNotifications(isOn):
+                state.notificationsEnabled = isOn
                 return .none
-            case .toggleDarkMode:
-                state.darkModeEnabled.toggle()
+            case let .toggleDarkMode(isOn):
+                state.darkModeEnabled = isOn
                 return .none
             }
         }
     }
 }
 
-// MARK: - Detail Feature
 @Reducer
 struct DetailFeature {
     @ObservableState
-    struct State: Equatable {
-        var itemId: String
-        var itemTitle: String
-        var itemDescription: String
-        
-        init(itemId: String) {
-            self.itemId = itemId
-            self.itemTitle = "Detail for \(itemId)"
-            self.itemDescription = "This is a detailed view for item: \(itemId)"
-        }
+    struct State: Equatable, Hashable {
+        let itemId: String
     }
     
     enum Action {
-        case backButtonTapped
+        case dummy
     }
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .backButtonTapped:
+            case .dummy:
                 return .none
             }
         }

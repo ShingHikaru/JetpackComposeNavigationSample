@@ -20,10 +20,13 @@ let package = Package(
             name: "NavigationSample",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/NavigationSample"
         ),
         .testTarget(
             name: "NavigationSampleTests",
-            dependencies: ["NavigationSample"]),
+            dependencies: ["NavigationSample"],
+            path: "Tests/NavigationSampleTests"
+        ),
     ]
 )
