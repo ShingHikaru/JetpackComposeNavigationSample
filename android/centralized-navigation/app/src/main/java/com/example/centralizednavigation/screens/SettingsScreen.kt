@@ -7,16 +7,22 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.centralizednavigation.Navigation
+import com.example.centralizednavigation.ui.theme.CentralizedNavigationTheme
 
 /**
  * 設定画面
- * 集中管理型：Navigation.Navigatorを使用して遷移
+ * 集中管理型：関数型の引数でナビゲーション処理を受け取る
  */
 @Composable
-fun SettingsScreen(navController: NavController? = null) {
+fun SettingsScreen(
+    onNavigateToHome: () -> Unit = {},
+    onNavigateToProfile: () -> Unit = {},
+    onNavigateBack: () -> Unit = {}
+) {
     var notificationsEnabled by remember { mutableStateOf(true) }
     var darkModeEnabled by remember { mutableStateOf(false) }
     var selectedLanguage by remember { mutableStateOf("日本語") }
@@ -119,17 +125,13 @@ fun SettingsScreen(navController: NavController? = null) {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button(
-                onClick = { 
-                    navController?.let { Navigation.Navigator.navigateToHome(it) }
-                }
+                onClick = onNavigateToHome
             ) {
                 Text("Home")
             }
             
             Button(
-                onClick = { 
-                    navController?.let { Navigation.Navigator.navigateToProfile(it) }
-                }
+                onClick = onNavigateToProfile
             ) {
                 Text("Profile")
             }
@@ -138,11 +140,21 @@ fun SettingsScreen(navController: NavController? = null) {
         Spacer(modifier = Modifier.height(16.dp))
         
         OutlinedButton(
-            onClick = { 
-                navController?.let { Navigation.Navigator.navigateBack(it) }
-            }
+            onClick = onNavigateBack
         ) {
             Text("Back")
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SettingsScreenPreview() {
+    CentralizedNavigationTheme {
+        SettingsScreen(
+            onNavigateToHome = { /* Preview用のモック */ },
+            onNavigateToProfile = { /* Preview用のモック */ },
+            onNavigateBack = { /* Preview用のモック */ }
+        )
     }
 }

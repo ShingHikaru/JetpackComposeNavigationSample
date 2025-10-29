@@ -6,16 +6,22 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.centralizednavigation.Navigation
+import com.example.centralizednavigation.ui.theme.CentralizedNavigationTheme
 
 /**
  * プロフィール画面
- * 集中管理型：Navigation.Navigatorを使用して遷移
+ * 集中管理型：関数型の引数でナビゲーション処理を受け取る
  */
 @Composable
-fun ProfileScreen(navController: NavController? = null) {
+fun ProfileScreen(
+    onNavigateToHome: () -> Unit = {},
+    onNavigateToSettings: () -> Unit = {},
+    onNavigateBack: () -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -63,17 +69,13 @@ fun ProfileScreen(navController: NavController? = null) {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button(
-                onClick = { 
-                    navController?.let { Navigation.Navigator.navigateToHome(it) }
-                }
+                onClick = onNavigateToHome
             ) {
                 Text("Home")
             }
             
             Button(
-                onClick = { 
-                    navController?.let { Navigation.Navigator.navigateToSettings(it) }
-                }
+                onClick = onNavigateToSettings
             ) {
                 Text("Settings")
             }
@@ -82,11 +84,21 @@ fun ProfileScreen(navController: NavController? = null) {
         Spacer(modifier = Modifier.height(16.dp))
         
         OutlinedButton(
-            onClick = { 
-                navController?.let { Navigation.Navigator.navigateBack(it) }
-            }
+            onClick = onNavigateBack
         ) {
             Text("Back")
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProfileScreenPreview() {
+    CentralizedNavigationTheme {
+        ProfileScreen(
+            onNavigateToHome = { /* Preview用のモック */ },
+            onNavigateToSettings = { /* Preview用のモック */ },
+            onNavigateBack = { /* Preview用のモック */ }
+        )
     }
 }

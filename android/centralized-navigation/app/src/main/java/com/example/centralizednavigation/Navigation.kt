@@ -29,49 +29,83 @@ object Navigation {
      */
     fun NavGraphBuilder.setupNavigation(navController: NavController) {
         composable(Routes.HOME) {
-            HomeScreen(navController = navController)
+            HomeScreen(
+                onNavigateToProfile = { navController.navigateToProfile() },
+                onNavigateToSettings = { navController.navigateToSettings() },
+                onNavigateToDetail = { itemId -> navController.navigateToDetail(itemId) },
+                onNavigateToHomeWithClearBackStack = { navController.navigateToHomeWithClearBackStack() }
+            )
         }
         
         composable(Routes.PROFILE) {
-            ProfileScreen(navController = navController)
+            ProfileScreen(
+                onNavigateToHome = { navController.navigateToHome() },
+                onNavigateToSettings = { navController.navigateToSettings() },
+                onNavigateBack = { navController.navigateBack() }
+            )
         }
         
         composable(Routes.SETTINGS) {
-            SettingsScreen(navController = navController)
+            SettingsScreen(
+                onNavigateToHome = { navController.navigateToHome() },
+                onNavigateToProfile = { navController.navigateToProfile() },
+                onNavigateBack = { navController.navigateBack() }
+            )
         }
         
         composable(Routes.DETAIL) { backStackEntry ->
             val itemId = backStackEntry.arguments?.getString("itemId") ?: ""
-            DetailScreen(itemId = itemId, navController = navController)
+            DetailScreen(
+                itemId = itemId,
+                onNavigateToHome = { navController.navigateToHome() },
+                onNavigateToProfile = { navController.navigateToProfile() },
+                onNavigateToSettings = { navController.navigateToSettings() },
+                onNavigateBack = { navController.navigateBack() }
+            )
         }
     }
     
     /**
      * ナビゲーション関数群
-     * 全ての画面遷移をここで一括管理
+     * NavControllerのextensionとして定義し、より簡潔なAPIを提供
      */
     object Navigator {
-        fun navigateToHome(navController: NavController) {
-            navController.navigate(Routes.HOME) {
+        /**
+         * ホーム画面に遷移
+         */
+        fun NavController.navigateToHome() {
+            navigate(Routes.HOME) {
                 popUpTo(Routes.HOME) { inclusive = true }
             }
         }
         
-        fun navigateToProfile(navController: NavController) {
-            navController.navigate(Routes.PROFILE)
+        /**
+         * プロフィール画面に遷移
+         */
+        fun NavController.navigateToProfile() {
+            navigate(Routes.PROFILE)
         }
         
-        fun navigateToSettings(navController: NavController) {
-            navController.navigate(Routes.SETTINGS)
+        /**
+         * 設定画面に遷移
+         */
+        fun NavController.navigateToSettings() {
+            navigate(Routes.SETTINGS)
         }
         
-        fun navigateToDetail(navController: NavController, itemId: String) {
-            navController.navigate("detail/$itemId")
+        /**
+         * 詳細画面に遷移（パラメータ付き）
+         */
+        fun NavController.navigateToDetail(itemId: String) {
+            navigate("detail/$itemId")
         }
         
-        fun navigateBack(navController: NavController) {
-            if (navController.previousBackStackEntry != null) {
-                navController.popBackStack()
+        /**
+         * 前の画面に戻る
+         */
+        fun NavController.navigateBack() {
+            if (previousBackStackEntry != null) {
+                popBackStack()
             }
         }
         
@@ -79,8 +113,8 @@ object Navigation {
          * MenuBarの二回タップでトップ画面に戻る処理
          * バックスタックをクリアしてホーム画面に遷移
          */
-        fun navigateToHomeWithClearBackStack(navController: NavController) {
-            navController.navigate(Routes.HOME) {
+        fun NavController.navigateToHomeWithClearBackStack() {
+            navigate(Routes.HOME) {
                 popUpTo(0) { inclusive = false }
             }
         }

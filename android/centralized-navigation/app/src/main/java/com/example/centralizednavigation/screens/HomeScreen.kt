@@ -8,17 +8,24 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.centralizednavigation.Navigation
+import com.example.centralizednavigation.ui.theme.CentralizedNavigationTheme
 
 /**
  * ホーム画面
- * 集中管理型：Navigation.Navigatorを使用して遷移
+ * 集中管理型：関数型の引数でナビゲーション処理を受け取る
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController? = null) {
+fun HomeScreen(
+    onNavigateToProfile: () -> Unit = {},
+    onNavigateToSettings: () -> Unit = {},
+    onNavigateToDetail: (String) -> Unit = {},
+    onNavigateToHomeWithClearBackStack: () -> Unit = {}
+) {
     val items = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5")
     
     Column(
@@ -49,17 +56,13 @@ fun HomeScreen(navController: NavController? = null) {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button(
-                onClick = { 
-                    navController?.let { Navigation.Navigator.navigateToProfile(it) }
-                }
+                onClick = onNavigateToProfile
             ) {
                 Text("Profile")
             }
             
             Button(
-                onClick = { 
-                    navController?.let { Navigation.Navigator.navigateToSettings(it) }
-                }
+                onClick = onNavigateToSettings
             ) {
                 Text("Settings")
             }
@@ -79,9 +82,7 @@ fun HomeScreen(navController: NavController? = null) {
                         .fillMaxWidth()
                         .padding(vertical = 4.dp),
                     onClick = { 
-                        navController?.let { 
-                            Navigation.Navigator.navigateToDetail(it, item)
-                        }
+                        onNavigateToDetail(item)
                     }
                 ) {
                     Text(
@@ -101,14 +102,23 @@ fun HomeScreen(navController: NavController? = null) {
         )
         
         Button(
-            onClick = { 
-                // 集中管理型：Navigation.Navigatorを使用
-                navController?.let { 
-                    Navigation.Navigator.navigateToHomeWithClearBackStack(it)
-                }
-            }
+            onClick = onNavigateToHomeWithClearBackStack
         ) {
             Text("Clear BackStack & Go Home")
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    CentralizedNavigationTheme {
+        HomeScreen(
+            onNavigateToProfile = { /* Preview用のモック */ },
+            onNavigateToSettings = { /* Preview用のモック */ },
+            onNavigateToDetail = { /* Preview用のモック */ },
+            onNavigateToHomeWithClearBackStack = { /* Preview用のモック */ }
+        )
+    }
+}
+
